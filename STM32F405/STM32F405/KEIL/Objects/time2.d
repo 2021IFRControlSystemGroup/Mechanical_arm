@@ -50,3 +50,4 @@
 .\objects\time2.o: ..\ROBOT\BSP\dma2.h
 .\objects\time2.o: ..\ROBOT\APP\arm.h
 .\objects\time2.o: D:\Keil5\ARM\ARMCC\Bin\..\include\math.h
+.\objects\time2.o: ..\ROBOT\BSP\beep.h

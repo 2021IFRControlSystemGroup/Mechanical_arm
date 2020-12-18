@@ -497,6 +497,11 @@
               <FileType>1</FileType>
               <FilePath>..\ROBOT\BSP\time2.c</FilePath>
             </File>
+            <File>
+              <FileName>beep.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ROBOT\BSP\beep.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

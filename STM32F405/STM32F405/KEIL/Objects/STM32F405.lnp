@@ -20,6 +20,7 @@
 ".\objects\bsp.o"
 ".\objects\dma2.o"
 ".\objects\time2.o"
+".\objects\beep.o"
 ".\objects\led.o"
 ".\objects\can1.o"
 ".\objects\arm.o"

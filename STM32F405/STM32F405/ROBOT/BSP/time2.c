@@ -11,6 +11,7 @@ extern int BSP_OK_init_flag;
 extern int Arm_Init_flag;
 extern int32_t pos_tar1;
 extern int32_t pos_tar2;
+extern RC_Ctl_t RC_Ctl;
 uint32_t system_1ms=0;
 
 void TIM5_Int_Init(u16 arr,u16 psc)
@@ -37,42 +38,48 @@ void TIM5_Int_Init(u16 arr,u16 psc)
 	NVIC_Init(&NVIC_InitStructure);
 	
 }
-
 //定时器3中断服务函数
 void TIM5_IRQHandler(void)
 {
 	if(TIM_GetITStatus(TIM5,TIM_IT_Update)!= RESET) //溢出中断
 	{
-//		if(BSP_OK_init_flag)	
+		system_1ms++;
+		static int zero_time=0;
+		if(BSP_OK_init_flag)	
+		{
+			if(system_1ms>3000)
+			{
+				if(system_1ms%100==0)
+				{
+					if(Arm_Init_flag<4)
+					{
+						Arm_Init();		
+            zero_time=system_1ms;						
+					}	
+				}
+				if(system_1ms-zero_time>5000&&system_1ms%10==0)
+				{
+					Arm_task();
+				}
+			}			
+		}
+//		if(Arm_Init_flag==0)
 //		{
-//			if(Arm_Init_flag==0)
+//			Arm_Init();			
+//		}
+//		else
+//		{
+//			if(system_1ms%500==0)
 //			{
-//				Arm_Init();			
-//			}
-//			else
-//			{
-//				Arm_task();
+//				if(system_1ms%750==0)
+//				{
+//					Motor_Postion1(pos_tar1);			
+//				}
+//					Motor_Postion2(pos_tar2);			
 //			}
 //			
 //		}
-		system_1ms++;
-		if(Arm_Init_flag==0)
-		{
-			Arm_Init();			
-		}
-		else
-		{
-			if(system_1ms%500==0)
-			{
-				if(system_1ms%750==0)
-				{
-					Motor_Postion1(pos_tar1);			
-				}
-					Motor_Postion2(pos_tar2);			
-			}
-			
-		}
-		
+//		
 	}
 	TIM_ClearITPendingBit(TIM5,TIM_IT_Update);  //清除中断标志位
 }

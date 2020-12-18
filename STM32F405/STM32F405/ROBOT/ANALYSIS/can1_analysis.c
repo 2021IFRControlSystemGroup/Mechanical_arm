@@ -33,11 +33,11 @@ void Receive_Deal_Yun(CanRxMsg *Rx_message)
 	}
 }
 
-void Hand_Shake1(void)
+void Hand_Shake(uint32_t ID)
 {
 	CanTxMsg TxMessage;
 	TxMessage.StdId = 0x00;
-	TxMessage.ExtId = 0x0008019E;
+	TxMessage.ExtId = ID;
 	TxMessage.IDE = CAN_Id_Extended;		
 	TxMessage.RTR = CAN_RTR_Data;		  
 	TxMessage.DLC = 0x02;							 
@@ -48,38 +48,11 @@ void Hand_Shake1(void)
 	CAN_Transmit(CAN1, &TxMessage);   
 }
 
-void Hand_Shake2(void)
+void Motor_Eable(uint32_t ID)
 {
 	CanTxMsg TxMessage;
 	TxMessage.StdId = 0x00;
-	TxMessage.ExtId = 0x0010019E;
-	TxMessage.IDE = CAN_Id_Extended;		
-	TxMessage.RTR = CAN_RTR_Data;		  
-	TxMessage.DLC = 0x02;							 
-
-	TxMessage.Data[0] = 0x0A;
-	TxMessage.Data[1] = 0x07;
-	
-	CAN_Transmit(CAN1, &TxMessage);   
-}
-
-void Motor_Eable1(void)
-{
-	CanTxMsg TxMessage;
-	TxMessage.StdId = 0x00;
-	TxMessage.ExtId = 0x00080181;
-	TxMessage.IDE = CAN_Id_Extended;		
-	TxMessage.RTR = CAN_RTR_Data;		  
-	TxMessage.DLC = 0x00;							 
-	
-	CAN_Transmit(CAN1, &TxMessage);   
-}
-
-void Motor_Eable2(void)
-{
-	CanTxMsg TxMessage;
-	TxMessage.StdId = 0x00;
-	TxMessage.ExtId = 0x00100181;
+	TxMessage.ExtId = ID;
 	TxMessage.IDE = CAN_Id_Extended;		
 	TxMessage.RTR = CAN_RTR_Data;		  
 	TxMessage.DLC = 0x00;							 
@@ -88,11 +61,11 @@ void Motor_Eable2(void)
 }
 
 
-void Motor_Postion1(int32_t pos_tar)
+void Motor_Postion(uint32_t ID,int32_t pos_tar)
 {
 	CanTxMsg TxMessage;
 	TxMessage.StdId = 0x00;
-	TxMessage.ExtId = 0x00080186;
+	TxMessage.ExtId = ID;
 	TxMessage.IDE = CAN_Id_Extended;		
 	TxMessage.RTR = CAN_RTR_Data;		  
 	TxMessage.DLC = 0x04;			
@@ -105,20 +78,14 @@ void Motor_Postion1(int32_t pos_tar)
 	CAN_Transmit(CAN1, &TxMessage); 
 }
 
-void Motor_Postion2(int32_t pos_tar)
+void Motor_Calibrate(uint32_t ID)
 {
 	CanTxMsg TxMessage;
 	TxMessage.StdId = 0x00;
-	TxMessage.ExtId = 0x00100186;
+	TxMessage.ExtId = ID;
 	TxMessage.IDE = CAN_Id_Extended;		
 	TxMessage.RTR = CAN_RTR_Data;		  
-	TxMessage.DLC = 0x04;			
-
-	TxMessage.Data[0] = (unsigned char)((pos_tar>>24)&0xff);
-	TxMessage.Data[1] = (unsigned char)((pos_tar>>16)&0xff);
-	TxMessage.Data[2] = (unsigned char)((pos_tar>>8)&0xff);
-	TxMessage.Data[3] = (unsigned char)((pos_tar)&0xff);
+	TxMessage.DLC = 0x00;							 
 	
 	CAN_Transmit(CAN1, &TxMessage); 
 }
-
