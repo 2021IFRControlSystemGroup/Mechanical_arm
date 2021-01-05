@@ -8,6 +8,8 @@
 #include "yun.h"
 #include "can1.h"
 #include "can1_analysis.h"
+#include "can2.h"
+#include "can2_analysis.h"
 #include "remote_analysis.h"
 #include "chassis.h"
 #include "dma2.h"

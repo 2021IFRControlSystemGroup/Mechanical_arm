@@ -44,6 +44,8 @@
 .\objects\chassis.o: ..\ROBOT\BSP\bsp.h
 .\objects\chassis.o: ..\ROBOT\APP\can1.h
 .\objects\chassis.o: ..\ROBOT\ANALYSIS\can1_analysis.h
+.\objects\chassis.o: ..\ROBOT\APP\can2.h
+.\objects\chassis.o: ..\ROBOT\ANALYSIS\can2_analysis.h
 .\objects\chassis.o: ..\ROBOT\ANALYSIS\remote_analysis.h
 .\objects\chassis.o: ..\ROBOT\APP\chassis.h
 .\objects\chassis.o: ..\ROBOT\BSP\dma2.h

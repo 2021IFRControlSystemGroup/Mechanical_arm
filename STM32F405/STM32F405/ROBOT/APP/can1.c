@@ -1,7 +1,7 @@
 #include "can1.h"
 #include "can1_analysis.h"
 
-extern int CAN_flag;
+extern int CAN1_flag;
 
 void CAN1_Mode_Init(u8 tsjw,u8 tbs2,u8 tbs1,u16 brp,u8 mode)
 {
@@ -71,8 +71,8 @@ void CAN1_RX0_IRQHandler(void)                        //中断服务函数
 	CanRxMsg receive_data1;
   if(CAN_GetITStatus(CAN1,CAN_IT_FMP0))
 	{  
-		CAN_flag=1;
-		Receive_Deal_Yun(&receive_data1); 
+		CAN1_flag=1;
+		CAN_Receive(CAN1, CAN_FIFO0, &receive_data1);
 	}
   CAN_ClearITPendingBit(CAN1,CAN_IT_FMP0);               //清标志位
 }

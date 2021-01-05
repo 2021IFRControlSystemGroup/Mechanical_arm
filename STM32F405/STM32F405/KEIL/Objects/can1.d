@@ -44,6 +44,8 @@
 .\objects\can1.o: ..\ROBOT\APP\yun.h
 .\objects\can1.o: ..\ROBOT\BSP\bsp.h
 .\objects\can1.o: ..\ROBOT\ANALYSIS\can1_analysis.h
+.\objects\can1.o: ..\ROBOT\APP\can2.h
+.\objects\can1.o: ..\ROBOT\ANALYSIS\can2_analysis.h
 .\objects\can1.o: ..\ROBOT\ANALYSIS\remote_analysis.h
 .\objects\can1.o: ..\ROBOT\APP\chassis.h
 .\objects\can1.o: ..\ROBOT\BSP\dma2.h

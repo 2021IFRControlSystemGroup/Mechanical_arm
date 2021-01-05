@@ -28,6 +28,7 @@
 ".\objects\can2.o"
 ".\objects\remote_analysis.o"
 ".\objects\can1_analysis.o"
+".\objects\can2_analysis.o"
 ".\objects\delay.o"
 --strict --scatter ".\Objects\STM32F405.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols

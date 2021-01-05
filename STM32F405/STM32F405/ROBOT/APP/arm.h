@@ -3,8 +3,12 @@
 
 #include "stm32f4xx.h"
 #include "can1_analysis.h"
+#include "can2_analysis.h"
 #include "math.h"
 #include "beep.h" 
+
+
+#define abs(x) ((x)>0? (x):(-(x)))
 
 #define ID1_HANDSHAKE 0x0008019E
 #define ID2_HANDSHAKE 0x0010019E
@@ -29,6 +33,8 @@ void Arm_task(void);
 void Angle(void);
 
 int Arm_Workspace_Judge(float tarX,float tarY);
+
+void Round_Crossover_Point(float center1,float center2,float R,float r);
 
 #endif
 

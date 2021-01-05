@@ -43,6 +43,8 @@
 .\objects\main.o: ..\ROBOT\BSP\bsp.h
 .\objects\main.o: ..\ROBOT\APP\can1.h
 .\objects\main.o: ..\ROBOT\ANALYSIS\can1_analysis.h
+.\objects\main.o: ..\ROBOT\APP\can2.h
+.\objects\main.o: ..\ROBOT\ANALYSIS\can2_analysis.h
 .\objects\main.o: ..\ROBOT\ANALYSIS\remote_analysis.h
 .\objects\main.o: ..\ROBOT\APP\chassis.h
 .\objects\main.o: ..\ROBOT\BSP\dma2.h

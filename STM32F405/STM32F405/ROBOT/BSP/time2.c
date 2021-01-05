@@ -2,7 +2,7 @@
 #include "can1_analysis.h"
 #include "arm.h"
 #include "delay.h"
-
+#include "can2_analysis.h"
 
 extern int CAN_flag;
 extern int Motor_Eable_flag;
@@ -38,48 +38,42 @@ void TIM5_Int_Init(u16 arr,u16 psc)
 	NVIC_Init(&NVIC_InitStructure);
 	
 }
+extern int time_space;
 //定时器3中断服务函数
 void TIM5_IRQHandler(void)
 {
 	if(TIM_GetITStatus(TIM5,TIM_IT_Update)!= RESET) //溢出中断
 	{
 		system_1ms++;
+		if(RC_Ctl.rc.switch_left==RC_SWITCH_DOWN)
+		{
+			Motor_Eable1(ID1_ENABLE+1);
+			Motor_Eable2(ID2_ENABLE+1);
+		}
+		if(RC_Ctl.rc.switch_right==RC_SWITCH_DOWN)
+		{
+			Arm_Init_flag=0;
+			GPIO_ResetBits(GPIOC,GPIO_Pin_0);
+		}
 		static int zero_time=0;
 		if(BSP_OK_init_flag)	
 		{
-			if(system_1ms>3000)
+			if(system_1ms>1000)
 			{
 				if(system_1ms%100==0)
 				{
-					if(Arm_Init_flag<4)
+					if(Arm_Init_flag==0)
 					{
 						Arm_Init();		
             zero_time=system_1ms;						
 					}	
 				}
-				if(system_1ms-zero_time>5000&&system_1ms%10==0)
+				if(system_1ms-zero_time>3000&&system_1ms%time_space==0)
 				{
 					Arm_task();
 				}
 			}			
 		}
-//		if(Arm_Init_flag==0)
-//		{
-//			Arm_Init();			
-//		}
-//		else
-//		{
-//			if(system_1ms%500==0)
-//			{
-//				if(system_1ms%750==0)
-//				{
-//					Motor_Postion1(pos_tar1);			
-//				}
-//					Motor_Postion2(pos_tar2);			
-//			}
-//			
-//		}
-//		
 	}
 	TIM_ClearITPendingBit(TIM5,TIM_IT_Update);  //清除中断标志位
 }
