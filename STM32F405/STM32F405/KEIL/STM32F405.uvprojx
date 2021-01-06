@@ -502,6 +502,11 @@
               <FileType>1</FileType>
               <FilePath>..\ROBOT\BSP\beep.c</FilePath>
             </File>
+            <File>
+              <FileName>usart3_vision.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ROBOT\BSP\usart3_vision.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
