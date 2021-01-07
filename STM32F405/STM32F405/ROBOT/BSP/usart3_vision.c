@@ -3,7 +3,7 @@
 
 uint8_t   USART3_DMA_RX_BUF[2][DMA_VISION_RX_BUF_LENGTH] = {0};
 uint8_t Vision_frame_rx_len = 0;
-extern u32 time_tick_1ms;
+extern u32 system_1ms;
 VISION_DATA Vision_Data = VISION_DATA_DEFAULT;
 
 
@@ -14,19 +14,19 @@ void USART3_Vision_Init(void)
 	NVIC_InitTypeDef nvic;
 	DMA_InitTypeDef dma;
 
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);  
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);  
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA1, ENABLE);   
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, ENABLE);
 
-	GPIO_PinAFConfig(GPIOD,GPIO_PinSource8,GPIO_AF_USART3);
-	GPIO_PinAFConfig(GPIOD,GPIO_PinSource9,GPIO_AF_USART3); 
+	GPIO_PinAFConfig(GPIOC,GPIO_PinSource10,GPIO_AF_USART3);
+	GPIO_PinAFConfig(GPIOC,GPIO_PinSource11,GPIO_AF_USART3); 
 
-	gpio.GPIO_Pin = GPIO_Pin_8 | GPIO_Pin_9;
+	gpio.GPIO_Pin = GPIO_Pin_10 | GPIO_Pin_11;
 	gpio.GPIO_Mode = GPIO_Mode_AF;
 	gpio.GPIO_OType = GPIO_OType_PP;
 	gpio.GPIO_Speed = GPIO_Speed_100MHz;
 	gpio.GPIO_PuPd = GPIO_PuPd_NOPULL;
-	GPIO_Init(GPIOD,&gpio);
+	GPIO_Init(GPIOC,&gpio);
 
 	nvic.NVIC_IRQChannel = USART3_IRQn;
 	nvic.NVIC_IRQChannelPreemptionPriority = 2;
@@ -78,10 +78,8 @@ u32 last_time = 0;
 
 void USART3_IRQHandler(void)
 {
-
 	 if(USART_GetITStatus(USART3, USART_IT_IDLE) != RESET)
 	 {
-
 		  (void)USART3->SR;
 		  (void)USART3->DR;
 			if(DMA_GetCurrentMemoryTarget(DMA1_Stream1) == 0)
@@ -92,8 +90,7 @@ void USART3_IRQHandler(void)
 			   DMA_DoubleBufferModeConfig(DMA1_Stream1, (uint32_t)&USART3_DMA_RX_BUF[1][0], DMA_Memory_1); 
 			   DMA_Cmd(DMA1_Stream1, ENABLE);
 				 
-				 VisionData_analysis(USART3_DMA_RX_BUF[0]);
-				
+				 VisionData_analysis(USART3_DMA_RX_BUF[0]);				
 		  }
 			else 
 		  {
@@ -111,7 +108,6 @@ void USART3_IRQHandler(void)
 void VisionData_analysis(uint8_t *pData)
 {
 	int i = 0;
-//	u16 CRC16 = 0;
 	int tar_x_raw = 0;
 	int tar_y_raw = 0;	
 	
@@ -127,22 +123,12 @@ void VisionData_analysis(uint8_t *pData)
 			i++;
 			if(i>=Vision_frame_rx_len) break;
 		}
-
-//		CRC16 = (pData[i+8]<<8)|pData[i+9];
-//		if(Get_CRC16_Check_Sum(&pData[i],8) == CRC16)
-//		{
 		
 		
-			DeviceFpsFeed(LOST_VISION);
-		
-			cs_time = time_tick_1ms - last_time;
-			last_time = time_tick_1ms;
-		    //4.29		
-		    Vision_Data.buff_sign = pData[i+1]>>4;
-//			Vision_Data.armor_dis = ((pData[i+2]<<8)|pData[i+3]) & 0xffff;
-//			tar_x_raw = ((pData[i+4]<<8)|pData[i+5]) & 0xffff;
-//			tar_y_raw = ((pData[i+6]<<8)|pData[i+7]) & 0xffff;
-            //5.4
+			cs_time = system_1ms - last_time;
+			last_time = system_1ms;
+	
+		  Vision_Data.buff_sign = pData[i+1]>>4;
 			Vision_Data.armor_sign = pData[i+1]>>7;
 			Vision_Data.armor_dis_or_buff_cy = ((pData[i+2]<<8)|pData[i+3]) & 0xffff;
 			tar_x_raw = ((pData[i+4]<<8)|pData[i+5]) & 0xffff;
@@ -151,7 +137,7 @@ void VisionData_analysis(uint8_t *pData)
 			
 			Vision_Data.tar_x = tar_x_raw/10.0f;
 			Vision_Data.tar_y = tar_y_raw/10.0f;	
-//			Vision_Data.armor_dis_or_buff_cy -= 30.0f; 
+
 			Vision_Data.runtime = pData[i+10];
 
 			Vision_Data.Num++;
@@ -159,42 +145,9 @@ void VisionData_analysis(uint8_t *pData)
 			{
 				Vision_Data.Num = 0;
 			}
-			i = i + 11;
-			/*检查是否在线*/
-			LostCountFeed(&(Error_Check.count[LOST_VISION]));
-//		}
-//		else 
-//		{
-//			i = i + 10;
-//		}		
-		
+			i = i + 11;			
 	}
 	 
 		
 }
 
-//			Vision_Data.buff_sign = pData[i+1];
-//			Vision_Data.armor_dis = ((pData[i+2]<<8|pData[i+3])&0xffff);
-//			tar_x_raw = ((pData[i+4]<<8)|pData[i+5]) & 0xffff;
-//			tar_y_raw = ((pData[i+6]<<8)|pData[i+7]) & 0xffff;	
-//			
-//			Vision_Data.tar_x = tar_x_raw/10.0f;
-//			Vision_Data.tar_y = tar_y_raw/10.0f;	
-
-//			Vision_Data.armor_sign = pData[i+1]>>7;
-//			Vision_Data.armor_type = (pData[i+1]>>5) & 0x03;
-//			Vision_Data.armor_dis = pData[i+2];
-//			Vision_Data.tar_x = ((pData[i+3]<<8)|pData[i+4]) & 0xffff;
-//			Vision_Data.tar_y = ((pData[i+5]<<8)|pData[i+6]) & 0xffff;	
-//      Vision_Data.Velocity_x = (pData[i+7]<<8)|pData[i+8];
-//			Vision_Data.count = pData[i+9];
-
-
-//4.27自瞄
-//			Vision_Data.armor_sign = pData[i+1]>>7;
-//			Vision_Data.armor_dis =  pData[i+2];
-//			tar_x_raw = ((pData[i+3]<<8)|pData[i+4]) & 0xffff;
-//			tar_y_raw = ((pData[i+5]<<8)|pData[i+6]) & 0xffff;	
-//			
-//			Vision_Data.tar_x = tar_x_raw/10.0f;
-//			Vision_Data.tar_y = tar_y_raw/10.0f;	
